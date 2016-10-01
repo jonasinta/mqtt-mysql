@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: pahomqtt_asynch_
+Bundle-SymbolicName: pahomqtt_asynch_
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.eclipse.pahodemoAsync
