@@ -7,8 +7,7 @@ public class tmMysql_obj {
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	static final String DB_URL = "jdbc:mysql://192.168.1.71/varstor";
-	// static final String DB_URL =
-	// "jdbc:mysql://jonas-home.duckdns.org:10011/varstor";
+	// static final String DB_URL ="jdbc:mysql://jonas-home.duckdns.org:10011/varstor";
 
 	// Database credentials
 	static final String USER = "jonas";
@@ -37,7 +36,7 @@ public class tmMysql_obj {
 			stmt = conn.createStatement();
 			String sql;
 			// sql = "SELECT * FROM quest2";
-			sql = "INSERT INTO quest2 (bat_serviceV,esp_heap) VALUES  (23.987,28500 bfz58)";
+			sql = "INSERT INTO quest2 (bat_serviceV,esp_heap) VALUES  (23.987,28500 )";
 			stmt.executeUpdate(sql);
 			
 						
