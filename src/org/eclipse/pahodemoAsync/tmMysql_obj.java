@@ -25,7 +25,7 @@ public class tmMysql_obj {
 		Connection conn = null;
 		Statement stmt = null;
 		try {
-			// STEP 2: Register JDBC driver
+			// STEP 2: Register JDBC driver fufckfuckfuck
 			Class.forName("com.mysql.jdbc.Driver");
 
 			// STEP 3: Open a connection
