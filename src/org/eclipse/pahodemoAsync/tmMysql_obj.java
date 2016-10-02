@@ -14,13 +14,13 @@ public class tmMysql_obj {
 	static final String PASS = "jonas";
 	
 	//imstance fields
-	private String mqttMessage = null;
+	/*private String mqttMessage = null;
 	private String mqttSubscribeTo = null;
 	private Integer	 mqttTimestamp = null;
-	private Integer   mqttID = null;
+	private Integer   mqttID = null;*/
 	
 
-	public static void main(String[] args) {
+	public void get2Database(Integer timestamp, Integer deviceID, Integer voltage, Integer value2) {
 		Connection conn = null;
 		Statement stmt = null;
 		try {
@@ -35,8 +35,8 @@ public class tmMysql_obj {
 			System.out.println("Creating statement...");
 			stmt = conn.createStatement();
 			String sql;
-			// sql = "SELECT * FROM quest2";
-			sql = "INSERT INTO quest2 (bat_serviceV,esp_heap) VALUES  (23.987,28500 )";
+			
+			sql = "INSERT INTO quest2 (bat_serviceV,esp_heap) VALUES  ("+voltage+","+value2+" )";
 			stmt.executeUpdate(sql);
 			
 						

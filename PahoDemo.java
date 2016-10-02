@@ -1,4 +1,4 @@
-package org.eclipse.pahodemoAsync;
+package org.eclipse.pahodemo;
 
 import java.util.Date;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -11,17 +11,15 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class PahoListenPostSynchronus  implements MqttCallback{
+public class PahoDemo  implements MqttCallback{
 
   MqttClient client;
   
-  public PahoListenPostSynchronus() {}
+  public PahoDemo() {}
 
   public static void main(String[] args) {
-	  PahoListenPostSynchronus boing = new PahoListenPostSynchronus();
+    PahoDemo boing = new PahoDemo();
     boing.doDemo();
-    
-	
   }
 
   public void doDemo() {
@@ -53,11 +51,9 @@ public void connectionLost(Throwable cause) {
 }
 
 public void messageArrived(String topic, MqttMessage message) throws Exception {
-	tmMysql_obj toMysqlInstance1 = new tmMysql_obj();
+	// TODO Auto-generated method stub
 	//paho_gui.setTextField_sentValueText(message.toString());
 	String Str = new String(message.toString());
-	
-	
 	JSONParser parser = new JSONParser();
 	try {
 
@@ -68,15 +64,8 @@ public void messageArrived(String topic, MqttMessage message) throws Exception {
 		System.out.println("Volts; "+ jsonObject.get("Volts"));
 		System.out.println("Heap; "+ jsonObject.get("HEAP"));
 		System.out.println("Date; "+ date.toString());
+		
 		System.out.println("------------------------------------------");
-		Object voltage = jsonObject.get("Volts");
-		Object heap = jsonObject.get("HEAP");
-		//Float v1 = new Float((Float) voltage);
-		Number v2 = (Integer) heap;
-		//System.out.println(v1);
-		System.out.println(v2);
-	//	toMysqlInstance1.get2Database(0,0,voltage,heap);
-		System.out.println("Must have sent to database -------------------------------------");
 	} catch (ParseException e) {
 		e.printStackTrace();
 	}
