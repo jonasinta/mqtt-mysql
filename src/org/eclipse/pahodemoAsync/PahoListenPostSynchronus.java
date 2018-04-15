@@ -28,21 +28,19 @@ public class PahoListenPostSynchronus  implements MqttCallback{
     try {
     	MqttConnectOptions options;
     	
-    client = new MqttClient("tcp://192.168.1.71:10002", "JavaAppMonitorTESTING");
-   // client = new MqttClient("tcp://jonas-home.duckdns.org:10002", "JavaAppMonitor3");
+      client = new MqttClient("tcp://192.168.1.71:10002", "JavaAppMonitor");
+    	//client = new MqttClient("tcp://jonas-home.duckdns.org:10002", "JavaAppMonitor3");
       client.setCallback(this);
       client.setTimeToWait(10000L);
       options = new MqttConnectOptions();
-      options.setWill("mosquitto2mysql/error", "crashed".getBytes(),2,true);
+      options.setWill("pahodemo/clienterrors", "crased".getBytes(),2,true);
       client.connect(options);
-      System.out.println("just tried to connect using JavaAppMonitorTESTING and subscribed 408776");
       
       MqttMessage message = new MqttMessage();
       message.setPayload("A single message".getBytes());
       //client.publish("pahodemo/test", message);
       //String subscription = new String("pahodemo/test");
-      //client.subscribe("/mcu/14056893/heap,volts,stamp/");
-      client.subscribe("/mcu/408776/heap,volts,stamp/");
+      client.subscribe("/mcu/14056893/heap,volts,stamp/");
      //client.disconnect();
     } catch (MqttException e) {
       e.printStackTrace();
@@ -58,8 +56,7 @@ public void messageArrived(String topic, MqttMessage message) throws Exception {
 	tmMysql_obj toMysqlInstance1 = new tmMysql_obj();
 	//paho_gui.setTextField_sentValueText(message.toString());
 	String Str = new String(message.toString());
-	System.out.println(message);
-	System.out.println(topic);
+	
 	
 	JSONParser parser = new JSONParser();
 	try {
@@ -72,13 +69,14 @@ public void messageArrived(String topic, MqttMessage message) throws Exception {
 		System.out.println("Heap; "+ jsonObject.get("HEAP"));
 		System.out.println("Date; "+ date.toString());
 		System.out.println("------------------------------------------");
-		Number voltage = (Number) jsonObject.get("Volts");
-		Number heap = (Number) jsonObject.get("HEAP");
-		Float v1 = voltage.floatValue();
-		Integer v2 = heap.intValue();
-		
-	toMysqlInstance1.get2Database(0,0,v2,v1);
-		//System.out.println("Must have sent to database -------------------------------------");
+		Object voltage = jsonObject.get("Volts");
+		Object heap = jsonObject.get("HEAP");
+		//Float v1 = new Float((Float) voltage);
+		Number v2 = (Integer) heap;
+		//System.out.println(v1);
+		System.out.println(v2);
+	//	toMysqlInstance1.get2Database(0,0,voltage,heap);
+		System.out.println("Must have sent to database -------------------------------------");
 	} catch (ParseException e) {
 		e.printStackTrace();
 	}
@@ -91,8 +89,6 @@ public void deliveryComplete(IMqttDeliveryToken token) {
 	System.out.println("delivered");
 	
 }
-
-
 
 
 }

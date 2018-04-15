@@ -7,7 +7,7 @@ public class tmMysql_obj {
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	static final String DB_URL = "jdbc:mysql://192.168.1.71/varstor";
-	//static final String DB_URL ="jdbc:mysql://jonas-home.duckdns.org:10011/varstor";
+	// static final String DB_URL ="jdbc:mysql://jonas-home.duckdns.org:10011/varstor";
 
 	// Database credentials
 	static final String USER = "jonas";
@@ -20,7 +20,7 @@ public class tmMysql_obj {
 	private Integer   mqttID = null;*/
 	
 
-	public void get2Database(Integer timestamp, Integer deviceID, Integer heap, Float voltage) {
+	public void get2Database(Integer timestamp, Integer deviceID, Integer voltage, Integer value2) {
 		Connection conn = null;
 		Statement stmt = null;
 		try {
@@ -28,30 +28,46 @@ public class tmMysql_obj {
 			Class.forName("com.mysql.jdbc.Driver");
 
 			// STEP 3: Open a connection
-			//System.out.println("Connecting to database...");
+			System.out.println("Connecting to database...");
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
 			// STEP 4: Execute a query
-			//System.out.println("Creating statement...");
+			System.out.println("Creating statement...");
 			stmt = conn.createStatement();
 			String sql;
 			
-			sql = "INSERT INTO esp408776 (bat_serviceV,esp_heap) VALUES  ("+voltage+","+heap+" )";
+			sql = "INSERT INTO quest2 (bat_serviceV,esp_heap) VALUES  ("+voltage+","+value2+" )";
 			stmt.executeUpdate(sql);
 			
-			System.out.println("data sent to DB, volts "+voltage);			
+						
+			sql = "SELECT * FROM quest2";
+			ResultSet rs = stmt.executeQuery(sql);
+
+			// STEP 5: Extract data from result set and fuck
+			while (rs.next()) {
+				// Retrieve by column name
+				int id = rs.getInt("id");
+				float age = rs.getFloat("bat_serviceV");
+				String first = rs.getString("esp_heap");
+				String last = rs.getString("timestamp");
+
+				// Display values
+				System.out.print("ID: " + id);
+				System.out.print(", Voltage: " + age);
+				System.out.print(", Heap: " + first);
+				System.out.println(", Timestamp: " + last);
+			}
 			
-			// routine to count rows in table
-			/*sql = "SELECT count(*)" +
+			sql = "SELECT count(*)" +
 					" FROM quest2";
 			ResultSet boing = stmt.executeQuery(sql);
 			//System.out.println(boing+"fuck");
 			while (boing.next()) {
 				System.out.println(boing.getString(1));
 				
-			}*/
+			}
 			// STEP 6: Clean-up environment
-			//rs.close();
+			rs.close();
 			stmt.close();
 			conn.close();
 		} catch (SQLException se) {
@@ -74,6 +90,6 @@ public class tmMysql_obj {
 				se.printStackTrace();
 			}// end finally try
 		}// end try
-	//System.out.println("Goodbye!");
+		System.out.println("Goodbye!");
 	}// end main
 }// end FirstExample
