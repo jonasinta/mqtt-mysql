@@ -31,12 +31,20 @@ public class tmMysql_obj {
 			//System.out.println("Connecting to database...");
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
+			// STEP 3a: check if table exists for chipID and if not- create table
+			if (!chipID.equals("408776")) { //"408776" is the original chipid and used for very first table
+				stmt = conn.createStatement();
+				String sqlCheck;
+				sqlCheck = "CREATE TABLE IF NOT EXISTS esp" + chipID + " LIKE esp408776";
+				stmt.executeUpdate(sqlCheck);
+				stmt = null;
+			}
 			// STEP 4: Execute a query
 			//System.out.println("Creating statement...");
 			stmt = conn.createStatement();
 			String sql;
 			
-			sql = "INSERT INTO esp408776 (bat_serviceV,esp_heap) VALUES  ("+voltage+","+heap+" )";
+			sql = "INSERT INTO esp"+chipID+" (bat_serviceV,esp_heap) VALUES  ("+voltage+","+heap+" )";
 			stmt.executeUpdate(sql);
 
 			System.out.println("chipID of sender; "+chipID+"\n");
