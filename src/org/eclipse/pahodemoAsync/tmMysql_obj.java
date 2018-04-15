@@ -20,7 +20,7 @@ public class tmMysql_obj {
 	private Integer   mqttID = null;*/
 	
 
-	public void get2Database(Integer timestamp, Integer deviceID, Integer heap, Float voltage) {
+	public void get2Database(String chipID, Integer timestamp, Integer deviceID, Integer heap, Float voltage) {
 		Connection conn = null;
 		Statement stmt = null;
 		try {
@@ -38,7 +38,8 @@ public class tmMysql_obj {
 			
 			sql = "INSERT INTO esp408776 (bat_serviceV,esp_heap) VALUES  ("+voltage+","+heap+" )";
 			stmt.executeUpdate(sql);
-			
+
+			System.out.println("chipID of sender; "+chipID+"\n");
 			System.out.println("data sent to DB, volts "+voltage);			
 			
 			// routine to count rows in table
