@@ -15,6 +15,7 @@ public class PahoListenPostSynchronus  implements MqttCallback{
 
   MqttClient client;
   
+  
   public PahoListenPostSynchronus() {}
 
   public static void main(String[] args) {
@@ -35,12 +36,16 @@ public class PahoListenPostSynchronus  implements MqttCallback{
       options = new MqttConnectOptions();
       options.setWill("pahodemo/clienterrors", "crased".getBytes(),2,true);
       client.connect(options);
+      System.out.println("just tried to connect and subscribed \"/mcu/+/heap,volts,stamp/");
       
       MqttMessage message = new MqttMessage();
       message.setPayload("A single message".getBytes());
       //client.publish("pahodemo/test", message);
       //String subscription = new String("pahodemo/test");
-      client.subscribe("/mcu/14056893/heap,volts,stamp/");
+
+      //client.subscribe("/mcu/14056893/heap,volts,stamp/");
+      //client.subscribe("/mcu/408776/heap,volts,stamp/");
+      client.subscribe("/mcu/+/heap,volts,stamp/");//chip id part is the "+" bit
      //client.disconnect();
     } catch (MqttException e) {
       e.printStackTrace();
@@ -53,10 +58,15 @@ public void connectionLost(Throwable cause) {
 }
 
 public void messageArrived(String topic, MqttMessage message) throws Exception {
+	String stringChipID;
+	String[] chipID = topic.split("/");
+	stringChipID = chipID[2];
 	tmMysql_obj toMysqlInstance1 = new tmMysql_obj();
 	//paho_gui.setTextField_sentValueText(message.toString());
 	String Str = new String(message.toString());
-	
+	System.out.println("recieved message; "+message+"\n");
+	System.out.println("recieved topic; "+topic+"\n");
+	System.out.println("=================================================================\n\n");
 	
 	JSONParser parser = new JSONParser();
 	try {
@@ -69,14 +79,13 @@ public void messageArrived(String topic, MqttMessage message) throws Exception {
 		System.out.println("Heap; "+ jsonObject.get("HEAP"));
 		System.out.println("Date; "+ date.toString());
 		System.out.println("------------------------------------------");
-		Object voltage = jsonObject.get("Volts");
-		Object heap = jsonObject.get("HEAP");
-		//Float v1 = new Float((Float) voltage);
-		Number v2 = (Integer) heap;
-		//System.out.println(v1);
-		System.out.println(v2);
-	//	toMysqlInstance1.get2Database(0,0,voltage,heap);
-		System.out.println("Must have sent to database -------------------------------------");
+		Number voltage = (Number) jsonObject.get("Volts");
+		Number heap = (Number) jsonObject.get("HEAP");
+		Float v1 = voltage.floatValue();
+		Integer v2 = heap.intValue();
+		
+	toMysqlInstance1.get2Database(stringChipID, 0,0,v2,v1);
+		//System.out.println("Must have sent to database -------------------------------------");
 	} catch (ParseException e) {
 		e.printStackTrace();
 	}
