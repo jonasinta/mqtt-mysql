@@ -55,7 +55,7 @@ public class tmMysql_obj {
 						+"FOR EACH ROW "
 						+"BEGIN if (select COUNT(*) from esp"+chipID+") > 20000 "
 							+"then delete from esp"+chipID+" where id > 0 "
-							+"order by id asc limit 1; "
+							+"order by id desc limit 1; "
 						+"end if; "
 							+"END ";
 				stmt.execute(sqlCheck);
