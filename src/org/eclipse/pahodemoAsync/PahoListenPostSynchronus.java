@@ -7,6 +7,7 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -36,7 +37,8 @@ public class PahoListenPostSynchronus  implements MqttCallback{
       client.setTimeToWait(10000L);
       options = new MqttConnectOptions();
       options.setWill("pahodemo/clienterrors", "mqtt-mysql-crashed".getBytes(),2,true);
-      options.setConnectionTimeout(120);
+      int timeout = 120000;
+      options.setConnectionTimeout(timeout);
       client.connect(options);
       System.out.println("just tried to connect and subscribed \"/mcu/+/heap,volts,stamp/");
       
@@ -50,15 +52,23 @@ public class PahoListenPostSynchronus  implements MqttCallback{
       client.subscribe("/mcu/+/heap,volts,stamp/");//chip id part is the "+" bit
      //client.disconnect();
     } catch (MqttException e) {
+    	System.err.println("inside catch MqttExeption");
       e.printStackTrace();
+      System.err.println("STILL inside catch MqttExeption-just about to do my error report");
+      String error = e.getMessage();
+      System.err.print(error);
+      System.err.println("inside catch MqttExeption-just done my extra error report");
     }
+    
   }
 
+@Override
 public void connectionLost(Throwable cause) {
 	// TODO Auto-generated method stub
 	
 }
 
+@Override
 public void messageArrived(String topic, MqttMessage message) throws Exception {
 	String stringChipID;
 	String[] chipID = topic.split("/");
@@ -95,6 +105,7 @@ public void messageArrived(String topic, MqttMessage message) throws Exception {
     
 }
 
+@Override
 public void deliveryComplete(IMqttDeliveryToken token) {
 	// TODO Auto-generated method stub
 	System.out.println("delivered");
