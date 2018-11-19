@@ -20,25 +20,29 @@ transpose events and write to database</description>
       </plugin>
     </plugins>
   </build>
+  <repositories>
+  <repository>
+    <id>paho-mqtt-client</id>
+    <name>Paho MQTT Client</name>
+    <url>https://repo.eclipse.org/content/repositories/paho-releases/</url>
+  </repository>
+</repositories>
   <dependencies>
   	<dependency>
   		<groupId>mysql</groupId>
   		<artifactId>mysql-connector-java</artifactId>
   		<version>3.1.14</version>
   	</dependency>
-  	<dependency>
-  		<groupId>org.eclipse.paho</groupId>
-  		<artifactId>
-  			org.eclipse.paho.client.mqttv3.repository
-  		</artifactId>
-  		<version>1.1.0</version>
-  		<type>eclipse-repository</type>
-  	</dependency>
-  	<dependency>
+  	  	<dependency>
   		<groupId>com.googlecode.json-simple</groupId>
   		<artifactId>json-simple</artifactId>
-  		<version>1.1.1</version>
-  		<type>bundle</type>
+  		<version>1.1</version>
   	</dependency>
+  	 <dependency>
+    <groupId>org.eclipse.paho</groupId>
+    <artifactId>mqtt-client</artifactId>
+    <packaging>jar</packaging>
+    <version>0.4.0</version>
+  </dependency>
   </dependencies>
 </project>

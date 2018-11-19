@@ -29,12 +29,13 @@ public class PahoListenPostSynchronus  implements MqttCallback{
     try {
     	MqttConnectOptions options;
     	
-      client = new MqttClient("tcp://192.168.1.71:10002", "JavaAppMonitor");
-    	//client = new MqttClient("tcp://jonas-home.duckdns.org:10002", "JavaAppMonitor3");
+      client = new MqttClient("tcp://192.168.1.71:10002", "Mqtt-mysql-JavaMonitor");
+    	//client = new MqttClient("tcp://jonas-home.duckdns.org:10002", "Mqtt-mysql-JavaMonitor");
       client.setCallback(this);
       client.setTimeToWait(10000L);
       options = new MqttConnectOptions();
-      options.setWill("pahodemo/clienterrors", "crased".getBytes(),2,true);
+      options.setWill("pahodemo/clienterrors", "mqtt-mysql-crashed".getBytes(),2,true);
+      options.setConnectionTimeout(120);
       client.connect(options);
       System.out.println("just tried to connect and subscribed \"/mcu/+/heap,volts,stamp/");
       
