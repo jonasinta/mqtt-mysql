@@ -31,6 +31,7 @@ public class PahoListenPostSynchronus  implements MqttCallback{
     	
       client = new MqttClient("tcp://192.168.1.71:10002", "Mqtt-mysql-JavaMonitor");
     	//client = new MqttClient("tcp://jonas-home.duckdns.org:10002", "Mqtt-mysql-JavaMonitor");
+      //blank line
       client.setCallback(this);
       client.setTimeToWait(10000L);
       options = new MqttConnectOptions();
