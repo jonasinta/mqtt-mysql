@@ -19,14 +19,21 @@ public class PahoListenPostSynchronus  implements MqttCallback{
   
   public PahoListenPostSynchronus() {}
 
-  public static void main(String[] args) {
-	  PahoListenPostSynchronus boing = new PahoListenPostSynchronus();
-    boing.doDemo();
+  public static void main(String[] args) throws InterruptedException {
+	  mqttClientInit();
     
 	
   }
 
-  public void doDemo() {
+public static void mqttClientInit() throws InterruptedException {
+	PahoListenPostSynchronus boing = new PahoListenPostSynchronus();
+    while (boing.doDemo() ==0 ) {
+		System.err.println("network problem");
+		Thread.sleep(10000);
+	}
+}
+
+  public int doDemo() {
     try {
     	MqttConnectOptions options;
     	
@@ -37,35 +44,32 @@ public class PahoListenPostSynchronus  implements MqttCallback{
       client.setTimeToWait(10000L);
       options = new MqttConnectOptions();
       options.setWill("pahodemo/clienterrors", "mqtt-mysql-crashed".getBytes(),2,true);
-      int timeout = 120000;
-      options.setConnectionTimeout(timeout);
       client.connect(options);
       System.out.println("just tried to connect and subscribed \"/mcu/+/heap,volts,stamp/");
       
-      MqttMessage message = new MqttMessage();
-      message.setPayload("A single message".getBytes());
-      //client.publish("pahodemo/test", message);
-      //String subscription = new String("pahodemo/test");
-
-      //client.subscribe("/mcu/14056893/heap,volts,stamp/");
-      //client.subscribe("/mcu/408776/heap,volts,stamp/");
+    
       client.subscribe("/mcu/+/heap,volts,stamp/");//chip id part is the "+" bit
-     //client.disconnect();
+     
     } catch (MqttException e) {
     	System.err.println("inside catch MqttExeption");
       e.printStackTrace();
-      System.err.println("STILL inside catch MqttExeption-just about to do my error report");
-      String error = e.getMessage();
-      System.err.print(error);
-      System.err.println("inside catch MqttExeption-just done my extra error report");
+        System.err.println(e.getMessage());
+        return 0;
     }
+	return 1;
     
   }
 
 @Override
 public void connectionLost(Throwable cause) {
-	// TODO Auto-generated method stub
-	
+	System.err.println("inside connection lost callback");
+	System.err.print(cause.getMessage());
+	try {
+		mqttClientInit();
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}	
 }
 
 @Override
@@ -78,7 +82,7 @@ public void messageArrived(String topic, MqttMessage message) throws Exception {
 	String Str = new String(message.toString());
 	System.out.println("recieved message; "+message+"\n");
 	System.out.println("recieved topic; "+topic+"\n");
-	System.out.println("=================================================================\n\n");
+	
 	
 	JSONParser parser = new JSONParser();
 	try {
@@ -99,6 +103,7 @@ public void messageArrived(String topic, MqttMessage message) throws Exception {
 	toMysqlInstance1.get2Database(stringChipID, 0,0,v2,v1);
 		//System.out.println("Must have sent to database -------------------------------------");
 	} catch (ParseException e) {
+		System.err.println("inside json parser catch- musthave been a json parse problem");
 		e.printStackTrace();
 	}
     
@@ -108,7 +113,7 @@ public void messageArrived(String topic, MqttMessage message) throws Exception {
 @Override
 public void deliveryComplete(IMqttDeliveryToken token) {
 	// TODO Auto-generated method stub
-	System.out.println("delivered");
+	System.out.println("delivered to mosquitto server");
 	
 }
 

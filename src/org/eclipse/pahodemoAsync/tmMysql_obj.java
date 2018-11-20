@@ -95,5 +95,6 @@ public class tmMysql_obj {
 			}// end finally try
 		}// end try
 		System.out.println("Goodbye!");
+		System.out.println("=================================================================\n\n");
 	}// end main
 }// end FirstExample
