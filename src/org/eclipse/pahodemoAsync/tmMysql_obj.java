@@ -13,13 +13,7 @@ public class tmMysql_obj {
 	static final String USER = "jonas";
 	static final String PASS = "jonas";
 	
-	//imstance fields
-	/*private String mqttMessage = null;
-	private String mqttSubscribeTo = null;
-	private Integer	 mqttTimestamp = null;
-	private Integer   mqttID = null;*/
 	
-
 	public void get2Database(String chipID, Integer timestamp, Integer deviceID, Integer heap, Float voltage) {
 		Connection conn = null;
 		Statement stmt = null;
@@ -59,6 +53,14 @@ public class tmMysql_obj {
 						+"end if; "
 							+"END ";
 				stmt.execute(sqlCheck);
+				stmt = null;
+				
+				// add chipnumber to chipid table for the recently introduced chip
+				stmt = conn.createStatement();
+				
+				//sql = "INSERT INTO esp"+chipID+" (bat_serviceV,esp_heap) VALUES  ("+voltage+","+heap+" )";
+				String sql = "INSERT INTO chipid (chipid) VALUES  ('esp"+chipID+"')";
+				stmt.executeUpdate(sql);
 				stmt = null;
 			}
 			// STEP 4: Execute a query
